@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>ECOMMERCE</title>
+
+    <style>
+      .container {
+        padding: 16px;
+      }
+      #title {
+        margin-bottom: 20px;
+        border-color: red;
+
+        margin-left: 20px;
+      }
+      #image {
+        margin-bottom: 20px;
+        margin-left: 15px;
+        border-color: red;
+      }
+      #price {
+        margin-bottom: 20px;
+        margin-left: 20px;
+        border-color: red;
+      }
+      #add {
+        margin-left: 116px;
+        border-radius: 8px;
+        background-color: green;
+        font-size: 15px;
+        padding: 6px;
+      }
+      #reset {
+        border-radius: 8px;
+        background-color: yellow;
+        font-size: 15px;
+        padding: 6px;
+      }
+      #root {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      #showdiv {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 15px 60px;
+      }
+      #showdiv h2 {
+        font-size: 16px;
+      }
+      #showdiv p {
+        color: blue;
+        margin-top: 0;
+      }
+      #showdiv button {
+        background-color: green;
+        font-size: 15px;
+        border-radius: 8px;
+        padding: 6px;
+      }
+      #errors ul li {
+        color: red;
+        text-decoration: underline;
+      }
+
+      #cart {
+        font-size: 16px;
+        background-color: aqua;
+        width: 40%;
+        margin: 0% 3%;
+      }
+      td {
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body id="body">
+    <form id="form" action="">
+      <div class="container">
+        <h1>Item Required</h1>
+
+        <hr />
+        <div id="row">
+          <b>Product TiTle </b>
+          <input id="title" type="text" placeholder="Enter Product TiTle" />
+        </div>
+
+        <div id="row">
+          <label><b>Product Image</b></label>
+          <input id="image" type="text" placeholder="Product Image" />
+        </div>
+
+        <div id="row">
+          <label><b>Product Price</b></label>
+          <input id="price" type="text" placeholder="Product Price" />
+        </div>
+
+        <div class="btns">
+          <button id="add" type="submit">ADD</button>
+          <button id="reset" type="reset">Reset</button>
+        </div>
+
+        <div id="errors"></div>
+      </div>
+    </form>
+    <div id="root"></div>
+    <h1 id="cart">Cart</h1>
+    <table id="table" style="width:40%">
+      <tr>
+        <th style="width:30%">#</th>
+        <th style="width:40%">Title</th>
+        <th style="width:30%">price</th>
+      </tr>
+    </table>
+
+    <script>
+      const body = document.querySelector("#body");
+      const table = document.querySelector("#table");
+      const root = document.querySelector("#root");
+      const errors = document.querySelector("#errors");
+      const row = document.querySelector("#row");
+
+      const form = document.querySelector("#form");
+      const title = document.querySelector("#title");
+      const image = document.querySelector("#image");
+      const price = document.querySelector("#price");
+
+      //Errors Arrays
+
+      //Creating products_Array
+      const products = [];
+      let count = 0;
+
+      //header for showing no_item
+      const noitem = document.createElement("td");
+      noitem.setAttribute("id", "noitem");
+
+      noitem.innerHTML = "No item";
+      table.appendChild(noitem);
+
+      //ADD product function
+      function puchproduct(title, image, price) {
+        products.push(title, image, price);
+      }
+
+      //submit/Add buttton function
+      form.onsubmit = function(e) {
+        e.preventDefault();
+        additem(root, title.value, image.value, price.value); //passing input value
+      };
+
+      //add item function
+
+      function additem(root, title, image, price) {
+        const errors_arr = [];
+
+        if (!title) {
+          errors_arr.push("Invalid Product Title");
+        }
+
+        if (!image) {
+          errors_arr.push("Invalid Product Image");
+        }
+        if (!price) {
+          errors_arr.push("Invalid Product Price");
+        }
+        if (errors_arr.length) {
+          const ul = document.createElement("ul");
+
+          errors_arr.forEach(x => {
+            const li = document.createElement("li");
+            li.innerHTML = x;
+            ul.appendChild(li);
+          });
+
+          errors.innerHTML = "";
+
+          errors.appendChild(ul);
+        }
+
+        if (title && image && price) {
+          puchproduct(title, image, price);
+          //Creating product_div
+          const showdiv = document.createElement("div");
+          showdiv.setAttribute("id", "showdiv");
+
+          //Creating_titles_span
+          const title_h2 = document.createElement("h2");
+          title_h2.setAttribute("id", "title_h2");
+
+          //Creating_price_span
+          const price_p = document.createElement("p");
+          price_p.setAttribute("id", "price_p");
+
+          //Creating Image_tag
+          const imgtag = document.createElement("img");
+          imgtag.setAttribute("id", "imgtag");
+          imgtag.setAttribute("src", image);
+
+          //Create_CartButtton ...
+          const cartbtn = document.createElement("BUTTON");
+          cartbtn.setAttribute("type", "button");
+          cartbtn.setAttribute("id", "cartbtn");
+          cartbtn.innerHTML = "Add to cart";
+
+          //......................................................
+          //Showing product detail
+          title_h2.innerHTML = title;
+          price_p.innerHTML = price;
+
+          //appending  product all data
+          showdiv.appendChild(imgtag);
+          showdiv.appendChild(title_h2);
+          showdiv.appendChild(price_p);
+          showdiv.appendChild(cartbtn);
+
+          root.appendChild(showdiv);
+
+          //Cart header
+
+          //Add to Cart button function
+
+          cartbtn.onclick = function(e) {
+            count++;
+
+            const n = table.querySelector("#noitem");
+            n.innerHTML = "";
+
+            const tr = document.createElement("tr");
+            const td1 = document.createElement("td");
+            td1.innerHTML = count;
+
+            const td2 = document.createElement("td");
+            td2.innerHTML = title;
+
+            const td3 = document.createElement("td");
+            td3.innerHTML = price;
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            table.appendChild(tr);
+          };
+        }
+      }
+    </script>
+  </body>
+</html>
